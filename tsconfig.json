@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "baseUrl": "src",
+    "outDir": "build",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "strict": true
+  },
+  "include": ["src/**/*"]
+}
