@@ -1,4 +1,4 @@
-import { Response, Request } from "express";
+import { Response, Request, NextFunction } from "express";
 
 import roomsModel from "../models/rooms.model";
 import catchAsync from "../utils/catchAsync.utils";
@@ -13,23 +13,25 @@ import {
   calculateTravelTime,
 } from "../services/allocation.service";
 
+function generateRooms(): RoomType[] {
+  const rooms: RoomType[] = [];
+  for (let i = 1; i <= 10; i++) {
+    for (let j = 1; j <= (i === 10 ? 7 : 10); j++) {
+      rooms.push({
+        roomNumber: i * 100 + j,
+        isBooked: false,
+        floorNumber: i,
+        indexOnFloor: j - 1,
+      });
+    }
+  }
+  return rooms;
+}
+
 class companyController {
   public initiateRooms = catchAsync(async (req: Request, res: Response) => {
     await roomsModel.deleteMany({});
-
-    const rooms: RoomType[] = [];
-    for (let i = 1; i <= 10; i++) {
-      for (let j = 1; j <= (i === 10 ? 7 : 10); j++) {
-        rooms.push({
-          roomNumber: i * 100 + j,
-          isBooked: false,
-          floorNumber: i,
-          indexOnFloor: j - 1,
-        });
-      }
-    }
-
-    await roomsModel.insertMany(rooms);
+    await roomsModel.insertMany(generateRooms());
 
     ExpressResponse.accepted(res, "Rooms initiated successfully");
   });
@@ -70,30 +72,28 @@ class companyController {
     }
   });
 
-  public getAllRooms = catchAsync(async (req: Request, res: Response) => {
-    const rooms = await roomsModel
-      .find({})
-      .sort({ floorNumber: 1, roomNumber: 1 })
-      .lean();
-    ExpressResponse.success(res, "Rooms fetched successfully", rooms);
-  });
+  public getAllRooms = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+      let rooms = await roomsModel
+        .find({})
+        .sort({ floorNumber: 1, roomNumber: 1 })
+        .lean();
+
+      if (!rooms.length) {
+        await roomsModel.insertMany(generateRooms());
+        rooms = await roomsModel
+          .find({})
+          .sort({ floorNumber: 1, roomNumber: 1 })
+          .lean();
+      }
+
+      ExpressResponse.success(res, "Rooms fetched successfully", rooms);
+    }
+  );
 
   public resetCompanies = catchAsync(async (req: Request, res: Response) => {
     await roomsModel.deleteMany({});
-
-    const rooms: RoomType[] = [];
-    for (let i = 1; i <= 10; i++) {
-      for (let j = 1; j <= (i === 10 ? 7 : 10); j++) {
-        rooms.push({
-          roomNumber: i * 100 + j,
-          isBooked: false,
-          floorNumber: i,
-          indexOnFloor: j - 1,
-        });
-      }
-    }
-
-    await roomsModel.insertMany(rooms);
+    await roomsModel.insertMany(generateRooms());
 
     ExpressResponse.accepted(res, "Rooms reset successfully");
   });
