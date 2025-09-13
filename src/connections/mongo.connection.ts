@@ -1,18 +1,19 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 class MongoConnection {
   private connectUrl: string;
 
   constructor() {
-    this.connectUrl = process.env.MONGO_URL ?? '';
+    this.connectUrl = process.env.MONGO_URL ?? "";
   }
 
   public connect = async () => {
     try {
       await mongoose.connect(this.connectUrl);
-      console.log('Connected to MongoDB');
+      console.log("Connected to MongoDB");
     } catch (error) {
-      throw new Error('Error connecting to MongoDB');
+      console.log(error);
+      throw new Error("Error connecting to MongoDB");
     }
   };
 }

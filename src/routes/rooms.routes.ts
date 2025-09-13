@@ -9,20 +9,22 @@ import travelTime from "../validations/travelTime.zod";
 
 const router = express.Router();
 
-router.get("/initiate-rooms", roomController.initiateRooms);
+// Seed/init
+router.post("/api/init", roomController.initiateRooms);
 
-router.post("/book-room", validate(roomBook), roomController.bookRooms);
+// Spec endpoints
+router.get("/api/status", roomController.getAllRooms);
+router.post("/api/book", validate(roomBook), roomController.bookRooms);
+router.post("/api/randomize", roomController.randomRooms);
+router.post("/api/reset", roomController.resetCompanies);
 
+// Utility (optional)
+router.post("/api/travel-time", validate(travelTime), roomController.getTravelTime);
+
+// Backward compat for earlier paths (optional)
 router.get("/get-all-rooms", roomController.getAllRooms);
-
-router.patch("/reset-rooms", roomController.resetCompanies);
-
+router.post("/book-room", validate(roomBook), roomController.bookRooms);
 router.patch("/random-rooms", roomController.randomRooms);
-
-router.post(
-  "get-travel-time",
-  validate(travelTime),
-  roomController.getTravelTime
-);
+router.patch("/reset-rooms", roomController.resetCompanies);
 
 export default router;

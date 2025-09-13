@@ -6,6 +6,7 @@ const roomsSchema = new mongoose.Schema<RoomDocument>(
     roomNumber: { type: Number, required: true },
     isBooked: { type: Boolean, required: true },
     floorNumber: { type: Number, required: true },
+    indexOnFloor: { type: Number, required: true },
   },
   { timestamps: true }
 );

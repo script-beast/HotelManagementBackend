@@ -1,14 +1,19 @@
 {
-  "compilerOptions": {
-    "resolveJsonModule": true,
-    "jsx": "react",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "baseUrl": "src",
-    "outDir": "build",
-    "sourceMap": true,
-    "noImplicitAny": false,
-    "strict": true
-  },
-  "include": ["src/**/*"]
+	"compilerOptions": {
+		"target": "ES2020",
+		"module": "CommonJS",
+		"lib": ["ES2020"],
+		"outDir": "./dist",
+		"rootDir": "./src",
+		"strict": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true,
+		"resolveJsonModule": true,
+		"sourceMap": true,
+		"noImplicitAny": false,
+		"types": ["node", "express", "jest"]
+	},
+	"include": ["src"],
+	"exclude": ["node_modules", "dist"]
 }

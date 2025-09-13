@@ -1,6 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import morgan from "morgan";
 
 import ExpressError from "../libs/express/error.libs";
 import ExpressErrorMiddleWare from "../middlewares/errorHandle.error";
@@ -18,6 +19,7 @@ export default class ExpressConnection {
 
   private middlewares() {
     this.app.use(cors());
+    this.app.use(morgan("dev"));
     this.app.use(bodyParser.json({ limit: "30mb" }));
     this.app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
   }
